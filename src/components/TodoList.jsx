@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-
+import shortid from 'shortid';
 const StList = styled.div`
   display: flex;
   flex-direction: column;
@@ -10,9 +10,9 @@ const StList = styled.div`
 const TodoList = ({ todoList }) => {
   return (
     <StList>
-      {todoList.map((todo) => (
-        <div key={todo.id}>{todo.contents}</div>
-      ))}
+      {todoList.map((todo) => {
+        return <div key={shortid.generate()}>{todo}</div>;
+      })}
     </StList>
   );
 };

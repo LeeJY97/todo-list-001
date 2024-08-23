@@ -1,9 +1,47 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useReducer } from 'react';
 import styled, { css } from 'styled-components';
 import Button from '../components/Button';
 import FormInput from '../components/FormInput';
 import TodoList from '../components/TodoList';
-import shortid from 'shortid';
+import todoReducer from '../reducer/todoReducer';
+
+const initialTodos = [];
+
+const Home = () => {
+  const [todo, setTodo] = useState('');
+  const [todoList, dispatch] = useReducer(todoReducer, initialTodos);
+  const inputRef = useRef(null);
+
+  const handleTodo = (e) => {
+    setTodo(e.target.value);
+  };
+
+  console.log('todoList', todoList);
+
+  const addTodoList = () => {
+    // action 객체
+    dispatch({
+      type: 'add',
+      payload: todo,
+    });
+
+    setTodo('');
+    inputRef.current.focus();
+  };
+
+  return (
+    <StMainContainer>
+      <StHeaderSection>
+        <FormInput inputRef={inputRef} value={todo} onChange={handleTodo} />
+        <Button onClick={addTodoList}>등록</Button>
+      </StHeaderSection>
+
+      <StBodySection>
+        <TodoList todoList={todoList} />
+      </StBodySection>
+    </StMainContainer>
+  );
+};
 
 const FlexCenter = styled.div`
   display: flex;
@@ -34,40 +72,5 @@ const StBodySection = styled(FlexCenter)`
 
   background-color: #abebe0;
 `;
-
-const Home = () => {
-  const [todo, setTodo] = useState({ id: null, contents: '' });
-  const [todoList, setTodoList] = useState([]);
-  const inputRef = useRef(null);
-
-  const handleTodo = (e) => {
-    setTodo((state) => ({
-      ...state,
-      contents: e.target.value,
-    }));
-  };
-
-  const addTodoList = () => {
-    todo.id = shortid.generate();
-
-    setTodoList([...todoList, todo]);
-
-    setTodo({ id: shortid.generate(), contents: '' });
-    inputRef.current.focus();
-  };
-
-  return (
-    <StMainContainer>
-      <StHeaderSection>
-        <FormInput inputRef={inputRef} value={todo.contents} onChange={handleTodo} />
-        <Button onClick={addTodoList}>등록</Button>
-      </StHeaderSection>
-
-      <StBodySection>
-        <TodoList todoList={todoList} />
-      </StBodySection>
-    </StMainContainer>
-  );
-};
 
 export default Home;
