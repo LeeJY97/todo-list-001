@@ -1,43 +1,49 @@
-import { useRef, useState, useReducer } from 'react';
+import { useRef, useReducer } from 'react';
 import styled, { css } from 'styled-components';
 import Button from '../components/Button';
-import FormInput from '../components/FormInput';
 import TodoList from '../components/TodoList';
 import todoReducer from '../reducer/todoReducer';
 
-const initialTodos = [];
+const initialTodos = {
+  list: [],
+  todo: '',
+};
 
 const Home = () => {
-  const [todo, setTodo] = useState('');
-  const [todoList, dispatch] = useReducer(todoReducer, initialTodos);
+  const [todos, dispatch] = useReducer(todoReducer, initialTodos);
   const inputRef = useRef(null);
 
-  const handleTodo = (e) => {
-    setTodo(e.target.value);
+  const handleChangeInput = (e) => {
+    dispatch({
+      type: 'changeInput',
+      payload: e.target.value,
+    });
   };
 
-  console.log('todoList', todoList);
+  const handleToggle = (index) => {
+    dispatch({
+      type: 'toggle',
+      payload: index,
+    });
+  };
 
   const addTodoList = () => {
-    // action 객체
     dispatch({
       type: 'add',
-      payload: todo,
     });
 
-    setTodo('');
     inputRef.current.focus();
   };
 
   return (
     <StMainContainer>
       <StHeaderSection>
-        <FormInput inputRef={inputRef} value={todo} onChange={handleTodo} />
+        <input ref={inputRef} value={todos.todo} onChange={(e) => handleChangeInput(e)} />
         <Button onClick={addTodoList}>등록</Button>
       </StHeaderSection>
 
       <StBodySection>
-        <TodoList todoList={todoList} />
+        <TodoList todoList={todos.list} handleToggle={handleToggle} />
       </StBodySection>
     </StMainContainer>
   );
