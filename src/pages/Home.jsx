@@ -1,51 +1,26 @@
-import { useRef, useReducer } from 'react';
+import { useRef } from 'react';
 import styled, { css } from 'styled-components';
 import Button from '../components/Button';
+import FormInput from '../components/FormInput';
 import TodoList from '../components/TodoList';
-import todoReducer from '../reducer/todoReducer';
-
-const initialTodos = {
-  list: [],
-  todo: '',
-};
+import { TodoProvider } from '../context/todoContext';
 
 const Home = () => {
-  const [todos, dispatch] = useReducer(todoReducer, initialTodos);
   const inputRef = useRef(null);
 
-  const handleChangeInput = (e) => {
-    dispatch({
-      type: 'changeInput',
-      payload: e.target.value,
-    });
-  };
-
-  const handleToggle = (index) => {
-    dispatch({
-      type: 'toggle',
-      payload: index,
-    });
-  };
-
-  const addTodoList = () => {
-    dispatch({
-      type: 'add',
-    });
-
-    inputRef.current.focus();
-  };
-
   return (
-    <StMainContainer>
-      <StHeaderSection>
-        <input ref={inputRef} value={todos.todo} onChange={(e) => handleChangeInput(e)} />
-        <Button onClick={addTodoList}>등록</Button>
-      </StHeaderSection>
+    <TodoProvider>
+      <StMainContainer>
+        <StHeaderSection>
+          <FormInput inputRef={inputRef} />
+          <Button inputRef={inputRef}>등록</Button>
+        </StHeaderSection>
 
-      <StBodySection>
-        <TodoList todoList={todos.list} handleToggle={handleToggle} />
-      </StBodySection>
-    </StMainContainer>
+        <StBodySection>
+          <TodoList />
+        </StBodySection>
+      </StMainContainer>
+    </TodoProvider>
   );
 };
 

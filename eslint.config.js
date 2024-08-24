@@ -29,12 +29,9 @@ export default [
       ...react.configs['jsx-runtime'].rules,
       ...reactHooks.configs.recommended.rules,
       'react/jsx-no-target-blank': 'off',
-      'react-refresh/only-export-components': [
-        'warn',
-        { allowConstantExport: true },
-      ],
+      'react-refresh/only-export-components': "off",
       "react/prop-types": "off",
-      "no-debugger": "off",
+      "no-debugger": "off"
     },
   },
 ]

@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 import shortid from 'shortid';
+import { useTodo, useTodoDispatch } from '../context/todoContext';
+
 const StList = styled.div`
   display: flex;
   flex-direction: column;
@@ -11,14 +13,22 @@ const StSpan = styled.span`
   text-decoration: ${({ isCompleted }) => isCompleted && 'line-through'};
 `;
 
-const TodoList = ({ todoList, handleToggle }) => {
+const TodoList = () => {
+  const todos = useTodo();
+  const dispatch = useTodoDispatch();
+
   return (
     <StList>
-      {todoList.map((todo, index) => {
+      {todos.list.map((todo, index) => {
         return (
           <StSpan
             key={shortid.generate()}
-            onClick={() => handleToggle(index)}
+            onClick={() =>
+              dispatch({
+                type: 'toggle',
+                payload: index,
+              })
+            }
             isCompleted={todo.isCompleted}
           >
             {todo.todo}
